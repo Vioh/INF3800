@@ -1,15 +1,11 @@
 package no.uio.ifi.lt.search;
-
 import no.uio.ifi.lt.preprocessing.INormalizer;
 
 /**
  * A very simple and straightforward implementation of the
  * {@link IQuery} interface.
-
- * @author aleks
  */
 public class Query implements IQuery {
-
 	/**
 	 * The original query string.
 	 */
@@ -22,7 +18,6 @@ public class Query implements IQuery {
 	
 	/**
 	 * Constructor.
-	 * 
 	 * @param originalQuery the raw query string
 	 * @param normalizer defines how to normalize the query string
 	 */
@@ -34,7 +29,6 @@ public class Query implements IQuery {
 	/**
 	 * Implements the {@link IQuery} interface.
 	 */
-	
 	public int getNormalizedLength() {
 		return this.normalizedLength;
 	}
@@ -42,9 +36,7 @@ public class Query implements IQuery {
 	/**
 	 * Implements the {@link IQuery} interface.
 	 */
-	
 	public String getOriginalQuery() {
 		return this.originalQuery;
 	}
-	
 }

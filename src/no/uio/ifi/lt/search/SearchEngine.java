@@ -1,9 +1,7 @@
 package no.uio.ifi.lt.search;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import no.uio.ifi.lt.indexing.IInvertedIndex;
 import no.uio.ifi.lt.indexing.InMemoryInvertedIndex;
 import no.uio.ifi.lt.indexing.PostingList;
@@ -17,11 +15,8 @@ import no.uio.ifi.lt.tokenization.ITokenizer;
 
 /**
  * Implements a simple search engine.
- *
- * @author aleks
  */
 public class SearchEngine implements ISearchEngine {
-	
 	/**
 	 * Defines where we emit messages, if at all.
 	 */
@@ -34,7 +29,7 @@ public class SearchEngine implements ISearchEngine {
 	private INormalizer normalizer;
 
 	/**
-	 * Defines how queries and documents are split into "words".	 * 
+	 * Defines how queries and documents are split into "words".
 	 */
 	@SuppressWarnings("unused")
 	private ITokenizer tokenizer;
@@ -46,8 +41,7 @@ public class SearchEngine implements ISearchEngine {
 	private IDocumentStore documentStore;
 	
 	/**
-	 * Defines the inverted index over the contents of the
-	 * document store.
+	 * Defines the inverted index over the contents of the document store.
 	 */
 	private IInvertedIndex invertedIndex;
 
@@ -63,7 +57,6 @@ public class SearchEngine implements ISearchEngine {
 	
 	/**
 	 * Constructor, sort of. For internal use.
-	 * 
 	 * @param logger
 	 * @param normalizer
 	 * @param tokenizer
@@ -86,7 +79,6 @@ public class SearchEngine implements ISearchEngine {
 	
 	/**
 	 * Constructor. Uses simple default in-memory implementations.
-	 * 
 	 * @param filename
 	 * @param separator
 	 * @param logger
@@ -94,29 +86,19 @@ public class SearchEngine implements ISearchEngine {
 	 * @param ranker
 	 */
 	protected SearchEngine(String filename, ITokenizer tokenizer, IRanker ranker, Logger logger) {
-
-
-		INormalizer normalizer = new BrainDeadNormalizer();
-				
-		IDocumentStore documentStore = new InMemoryDocumentStore(filename, normalizer, logger);
-		
-		
-		 
+		INormalizer normalizer = new BrainDeadNormalizer();				
+		IDocumentStore documentStore = new InMemoryDocumentStore(filename, normalizer, logger);						 
 		IInvertedIndex invertedIndex = new InMemoryInvertedIndex(documentStore, normalizer, tokenizer, logger);
 		
 		// TODO: will be implemented in a later assignment
-		IQueryEvaluator queryEvaluator = null;
-		
-		
-		create(logger, normalizer, tokenizer, documentStore, invertedIndex, queryEvaluator, ranker);
-		
+		IQueryEvaluator queryEvaluator = null;		
+		create(logger, normalizer, tokenizer, documentStore, invertedIndex, queryEvaluator, ranker);		
 	}
 	
 	/**
 	 * Implements the {@link ISearchEngine} interface.
 	 */
-	public IResultSet evaluate(String value) {
-		
+	public IResultSet evaluate(String value) {		
 		// Normalize the query.
 		// TODO: Use dependency injection.
 		IQuery query = new Query(value, this.normalizer);
@@ -125,36 +107,25 @@ public class SearchEngine implements ISearchEngine {
 		IRanker ranker = this.ranker.clone();
 		
 		// Evaluate!
-		return this.queryEvaluator.evaluate(query, this.invertedIndex, ranker);
-		
+		return this.queryEvaluator.evaluate(query, this.invertedIndex, ranker);		
 	}
-	
 	
 	/**
 	 * Implements the {@link ISearchEngine} interface.
 	 */
 	public Map<String,Integer> evaluateBrainDead(String lookups) {
-		
-		
 		IToken[] loopupsTokenized = this.tokenizer.toArray(lookups);
 		
 		// frequencies for each lookup token
 		Map<String,Integer> frequencies = new HashMap<String,Integer>();
 		
-		for (IToken lookup : loopupsTokenized) {
-			
+		for (IToken lookup : loopupsTokenized) {			
 			int lexiconID = this.invertedIndex.getLexicon().lookup(lookup.getValue());
 			if (lexiconID != -1) {
 				PostingList ps = this.invertedIndex.getPostingList(lexiconID);			
 				frequencies.put(lookup.getValue(), ps.size());
 			}
-		}
-		
+		}		
 		return frequencies;
 	}
-	
-	
-	
-
-
 }

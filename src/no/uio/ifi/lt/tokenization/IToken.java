@@ -1,15 +1,11 @@
 package no.uio.ifi.lt.tokenization;
 
-
 /**
  * Defines a token, i.e., a "word" in a text buffer
  * for some suitable definition of "word".
- * 
- * @author aleks
  * @see ITokenizer
  */
 public interface IToken {
-	
 	/**
 	 * Returns the "word" itself.
 	 */
@@ -28,5 +24,4 @@ public interface IToken {
 	 * buffer "hello world", "world" starts at index 6.
 	 */
 	int getStartIndex();
-	
 }

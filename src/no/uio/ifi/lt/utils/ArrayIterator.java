@@ -1,15 +1,11 @@
 package no.uio.ifi.lt.utils;
-
 import java.util.Iterator;
 
 /**
  * Utility class for iterating over primitive arrays.
- * 
- * @author aleks
  * @param <T> the type of each array element
  */
 public class ArrayIterator<T> implements Iterator<T> {
-
 	/**
 	 * The array over which we are iterating.
 	 */
@@ -26,8 +22,7 @@ public class ArrayIterator<T> implements Iterator<T> {
 	int size;
 
 	/**
-	 * Constructor.
-	 * 
+	 * Constructor. 
 	 * @param array the array that we want to iterate over
 	 */
 	public ArrayIterator(T[] array) {
@@ -38,7 +33,6 @@ public class ArrayIterator<T> implements Iterator<T> {
 
 	/**
 	 * Constructor.
-	 * 
 	 * @param array the array that we want to iterate over
 	 * @param size the logical size of the array
 	 */
@@ -77,6 +71,5 @@ public class ArrayIterator<T> implements Iterator<T> {
 	
 	public void remove() {
 		throw new UnsupportedOperationException();
-	}		
-
+	}
 }

@@ -1,14 +1,10 @@
 package no.uio.ifi.lt.storage;
 
-
 /**
  * A very simple and straightforward implementation of the
  * {@link IDocument} interface.
-
- * @author aleks
  */
-public class Document implements IDocument {
-	
+public class Document implements IDocument {	
 	/**
 	 * The document's original and searchable data.
 	 */
@@ -31,15 +27,13 @@ public class Document implements IDocument {
 
 	/**
 	 * Implements the {@link IDocument} interface.
-	 */
-	
+	 */	
 	public String getExtraData() {
 		return this.extraData;
 	}
 	
 	/**
 	 * The logical inverse of {@link #getExtraData()}.
-     *
 	 * @param extraData the document's meta data
 	 */
 	public void setExtraData(String extraData) {
@@ -48,15 +42,13 @@ public class Document implements IDocument {
 
 	/**
 	 * Implements the {@link IDocument} interface.
-	 */
-	
+	 */	
 	public int getNormalizedLength() {
 		return this.normalizedLength;
 	}
 
 	/**
 	 * The logical inverse of {@link #getNormalizedLength()}.
-	 *
 	 * @param normalizedLength the document's normalized length
 	 */
 	public void setNormalizedLength(int normalizedLength) {
@@ -65,15 +57,13 @@ public class Document implements IDocument {
 	
 	/**
 	 * Implements the {@link IDocument} interface.
-	 */
-	
+	 */	
 	public String getOriginalData() {
 		return this.originalData;
 	}
 
 	/**
 	 * The logical inverse of {@link #getOriginalData()}.
-     *
 	 * @param extraData the document's searchable data
 	 */
 	public void setOriginalData(String originalData) {
@@ -82,19 +72,16 @@ public class Document implements IDocument {
 	
 	/**
 	 * Implements the {@link IDocument} interface.
-	 */
-	
+	 */	
 	public double getStaticRank() {
 		return this.staticRank;
 	}
 
 	/**
 	 * The logical inverse of {@link #getStaticRank()}.
-     *
 	 * @param staticRank the document's static rank
 	 */
 	public void setStaticRank(double staticRank) {
 		this.staticRank = staticRank;
-	}
-	
+	}	
 }

@@ -1,20 +1,15 @@
 package no.uio.ifi.lt.search;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
  * A very simple and straightforward implementation of the
  * {@link IResultSet} interface.
- *
- * @author aleks
  */
 public class ResultSet implements IResultSet {
-		
 	/**
 	 * The query that generated this result set.
 	 */
@@ -54,7 +49,6 @@ public class ResultSet implements IResultSet {
 
 	/**
 	 * Appends a result to the result set.
-	 * 
 	 * @param result the result to append to the result set
 	 */
 	public void appendResult(IResult result) {
@@ -65,17 +59,13 @@ public class ResultSet implements IResultSet {
 	 * Sorts the results by their relevance scores.
 	 */
 	public void sortByRelevance() {
-	
 		// Define a small helper.
 		class ByRelevance implements Comparator<IResult> {
 			public int compare(IResult x, IResult y) {
 				return (int) Math.signum(y.getRelevance() - x.getRelevance());
 			}
 		}	
-
 		// Do it!
 		Collections.sort(this.results, new ByRelevance());
-		
 	}
-
 }

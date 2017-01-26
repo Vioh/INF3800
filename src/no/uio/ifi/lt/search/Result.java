@@ -1,15 +1,11 @@
 package no.uio.ifi.lt.search;
-
 import no.uio.ifi.lt.storage.IDocument;
 
 /**
  * A very simple and straightforward implementation of the
  * {@link IResult} interface.
- * 
- * @author aleks
  */
 public class Result implements IResult {
-
 	/**
 	 * Backs the {@link #getDocument()} method.
 	 */
@@ -22,7 +18,6 @@ public class Result implements IResult {
 
 	/**
 	 * Constructor.
-	 * 
 	 * @param document the matching document
 	 * @param relevance determines how relevant the matching document is to the query
 	 */
@@ -34,7 +29,6 @@ public class Result implements IResult {
 	/**
 	 * Implements the {@link IResult} interface.
 	 */
-	
 	public IDocument getDocument() {
 		return this.document;
 	}
@@ -42,9 +36,7 @@ public class Result implements IResult {
 	/**
 	 * Implements the {@link IResult} interface.
 	 */
-	
 	public double getRelevance() {
 		return this.relevance;
 	}
-
 }

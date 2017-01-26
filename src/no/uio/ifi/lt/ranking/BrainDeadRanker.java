@@ -1,5 +1,4 @@
 package no.uio.ifi.lt.ranking;
-
 import java.util.logging.Logger;
 
 import no.uio.ifi.lt.indexing.Posting;
@@ -11,12 +10,9 @@ import no.uio.ifi.lt.tokenization.IToken;
 
 /**
  * Implements an extremely simple relevance computation.
- * 
- * @author aleks
  * @see IQueryEvaluator
  */
 public class BrainDeadRanker implements IRanker {
-	
 	/**
 	 * For emitting log messages, if any.
 	 */
@@ -45,7 +41,6 @@ public class BrainDeadRanker implements IRanker {
 	/**
 	 * Implements the {@link IRanker} interface.
 	 */
-	
 	public IRanker clone() {
 		return new BrainDeadRanker(this.logger);
 	}
@@ -53,7 +48,6 @@ public class BrainDeadRanker implements IRanker {
 	/**
 	 * Implements the {@link IRanker} interface.
 	 */
-	
 	public void debug(boolean value) {
 		this.debug = value;
 	}
@@ -61,7 +55,6 @@ public class BrainDeadRanker implements IRanker {
 	/**
 	 * Implements the {@link IRanker} interface.
 	 */
-	
 	public double evaluate(IQuery query, IDocument document) {
 		return this.hitCount;
 	}
@@ -69,7 +62,6 @@ public class BrainDeadRanker implements IRanker {
 	/**
 	 * Implements the {@link IRanker} interface.
 	 */
-	
 	public void reset() {
 		this.hitCount = 0;
 	}
@@ -77,9 +69,7 @@ public class BrainDeadRanker implements IRanker {
 	/**
 	 * Implements the {@link IRanker} interface.
 	 */
-	
 	public void update(IToken token, Posting posting, PostingList postingList) {
-		
 		this.hitCount++;
 		
 		// Log spam?
@@ -87,7 +77,5 @@ public class BrainDeadRanker implements IRanker {
 			this.logger.finest(String.format("Token '%s' occurs across %d documents.", token.getValue(), postingList.size()));
 			this.logger.finest(String.format("Token '%s' occurs %d times in the current document.", token.getValue(), posting.getOccurrenceCount()));
 		}
-
 	}
-
 }

@@ -1,36 +1,24 @@
-
 package no.uio.ifi.lt.testing;
- 
-
 import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-
 import no.uio.ifi.lt.search.ISearchEngine;
 import no.uio.ifi.lt.search.SimpleSearchEngine;
 
-
 /**
  * Testing class for the assignment A of INF3800/INF4800.
- *
- * @author  plison
  */
 public class ObligATest extends TestCase {
-
 	Logger logger;	
 	
 	public ObligATest() {
 		createLogger();
 	}
- 
-	
-//	 @Before
+
 	public void createLogger() {
 		// Create a logger.
 		logger = Logger.getLogger(ObligATest.class.getName());
@@ -41,17 +29,14 @@ public class ObligATest extends TestCase {
 		ConsoleHandler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(Level.ALL);
 		
-    //  logger.addHandler(consoleHandler);
-        logger.setLevel(Level.ALL);		
+	//	logger.addHandler(consoleHandler);
+        logger.setLevel(Level.ALL);
 	}
-	
 	
 	/**
 	 * Simple test on the MESH data (one document per line)
 	 */
-//	@Test
 	public void testMesh() {
-		
         // Where are our documents?
         String filename = "data/mesh.txt";
 		
@@ -69,14 +54,10 @@ public class ObligATest extends TestCase {
 		Assert.assertEquals(7, frequencies.get("lead").intValue());	
 	}
 	
-	
-	
 	/**
 	 * Simple test on the CRAN data (XML-structured)
 	 */
-//	 @Test
 	public void testCran() {
-		
         // Where are our documents?
         String filename = "data/cran.xml";
 		
@@ -87,17 +68,17 @@ public class ObligATest extends TestCase {
 		String query = "rarefied hypersonic analysis";
 		Map<String,Integer> frequencies = engine.evaluateBrainDead(query);
 
+		if(frequencies == null) System.out.println("FUCKFUCKFUCK---------------");
+		
 		Assert.assertEquals(6, frequencies.get("rarefied").intValue());
 		Assert.assertEquals(145, frequencies.get("hypersonic").intValue());
 		Assert.assertEquals(249, frequencies.get("analysis").intValue());
 	}
 	
-	
-	
-/**	public static void main(String[] args) {
+	public static void main(String[] args) {
 		ObligATest test = new ObligATest();
 		test.createLogger();
+		test.testMesh();
 		test.testCran();
-	} */
-	
+	}	
 }
