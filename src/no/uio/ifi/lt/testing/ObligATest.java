@@ -67,8 +67,6 @@ public class ObligATest extends TestCase {
 		// silly sanity check:
 		String query = "rarefied hypersonic analysis";
 		Map<String,Integer> frequencies = engine.evaluateBrainDead(query);
-
-		if(frequencies == null) System.out.println("FUCKFUCKFUCK---------------");
 		
 		Assert.assertEquals(6, frequencies.get("rarefied").intValue());
 		Assert.assertEquals(145, frequencies.get("hypersonic").intValue());

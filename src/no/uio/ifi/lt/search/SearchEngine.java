@@ -31,7 +31,6 @@ public class SearchEngine implements ISearchEngine {
 	/**
 	 * Defines how queries and documents are split into "words".
 	 */
-	@SuppressWarnings("unused")
 	private ITokenizer tokenizer;
 		
 	/**
