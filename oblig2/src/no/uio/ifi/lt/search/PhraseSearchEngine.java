@@ -14,33 +14,22 @@ import no.uio.ifi.lt.utils.SuffixArray;
  * phrase searches. No ranking.
  */
 public class PhraseSearchEngine implements ISearchEngine {
-	/**
-	 * Defines where we emit messages, if at all.
-	 */
-	@SuppressWarnings("unused")
+	/** Defines where we emit messages, if at all. */
 	private Logger logger;
 	
-	/**
-	 * Defines how we normalize queries and documents.
-	 */
+	/** Defines how we normalize queries and documents. */
 	private INormalizer normalizer;
 
-	/**
-	 * Defines how queries and documents are split into "words".	 * 
-	 */
+	/** Defines how queries and documents are split into "words". */
 	private ITokenizer tokenizer;
 
-	/**
-	 * Defines where and how documents are stored.
-	 */
+	/** Defines where and how documents are stored. */
 	private IDocumentStore documentStore;
 	
-	/**
-	 * Defines the "index" over the contents of the document store.
-	 */
+	/** Defines the "index" over the contents of the document store. */
 	private SuffixArray suffixArray;
 	
-	/**
+	/** 
 	 * Constructor. Uses simple default in-memory implementations.
 	 * @param filename
 	 * @param logger
@@ -66,17 +55,14 @@ public class PhraseSearchEngine implements ISearchEngine {
 		
 		// Consult the suffix data. A prefix of a suffix is an infix.
 		int index = this.suffixArray.lookup(value);
-
 		if (index >= size) {
 			return resultSet;
 		}
-
-		// Key not found? The index tells us the logical insertion point, which is the
-		// starting point for all the prefix matches.
+		// Key not found? The index tells us the logical insertion point, 
+		// which is the starting point for all the prefix matches.
 		if (index < 0) {
 			index = -(index + 1);
 		}
-		
 		while (index < size) {
 			int entry = this.suffixArray.getEntry(index);
 			int offset = this.suffixArray.getOffset(index);
