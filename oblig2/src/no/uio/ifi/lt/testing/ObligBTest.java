@@ -69,8 +69,8 @@ public class ObligBTest extends TestCase {
 		// we should have 12 matches here
 		Assert.assertEquals(12, resultContent.size());
 		// example of match
-		Assert.assertTrue(resultContent.contains("reasons for enquiry--to provide a standard instrument for " + 
-				"the calibration of low speed anemometers ."));
+		Assert.assertTrue(resultContent.contains("\nreasons for enquiry--to provide a standard instrument for\n" + 
+				"the calibration of low speed anemometers .\n"));
 	}
 	
 	/**
