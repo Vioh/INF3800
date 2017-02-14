@@ -15,6 +15,12 @@ public interface IQuery {
 	String getOriginalQuery();
 	
 	/**
+	 * Returns the query string in its normalized form.
+	 * @return the normalized query string
+	 */
+	String getNormalizedQuery();
+	
+	/**
 	 * Returns the length of the query string after it has been
 	 * normalized by a suitable {@link INormalizer}.
 	 * @return the length of the normalized version of the query string

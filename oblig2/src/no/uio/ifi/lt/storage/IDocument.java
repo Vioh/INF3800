@@ -10,11 +10,16 @@ import no.uio.ifi.lt.search.IQuery;
  */
 public interface IDocument {	
 	/**
-	 * Returns the document's "searchable data" as it was
-	 * originally defined. 
-	 * @return the original document data that we are searching against
+	 * Returns the document's "searchable data" as it was originally defined. 
+	 * @return the original document data that we are searching against.
 	 */
 	String getOriginalData();
+	
+	/**
+	 * Returns the document's in its normalized form.
+	 * @return the normalized document data that we are searching against.
+	 */
+	String getNormalizedData();
 	
 	/**
 	 * Returns the length of the document's "searchable data" as it

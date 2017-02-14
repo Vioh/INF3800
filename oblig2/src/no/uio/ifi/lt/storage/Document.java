@@ -5,27 +5,22 @@ package no.uio.ifi.lt.storage;
  * {@link IDocument} interface.
  */
 public class Document implements IDocument {	
-	/**
-	 * The document's original and searchable data.
-	 */
+	/** The document's original and searchable data. */
 	private String originalData;
 	
-	/**
-	 * Arbitrary meta data for this document.
-	 */
+	/** The document's normalized and searchable data. */
+	private String normalizedData; 
+	
+	/** Arbitrary meta data for this document. */
 	private String extraData;
 	
-	/**
-	 * The length of a normalized version of {@link #originalData}.
-	 */
+	/** The length of a normalized version of {@link #originalData}. */
 	private int normalizedLength;
 	
-	/**
-	 * The document's static rank.
-	 */
+	/** The document's static rank. */
 	private double staticRank;
 
-	/**
+	/** 
 	 * Implements the {@link IDocument} interface.
 	 */	
 	public String getExtraData() {
@@ -64,10 +59,25 @@ public class Document implements IDocument {
 
 	/**
 	 * The logical inverse of {@link #getOriginalData()}.
-	 * @param extraData the document's searchable data
+	 * @param originalData the document's searchable data
 	 */
 	public void setOriginalData(String originalData) {
 		this.originalData = originalData;
+	}
+	
+	/**
+	 * Implements the {@link IDocument} interface.
+	 */
+	public String getNormalizedData() {
+		return this.normalizedData;
+	}
+	
+	/**
+	 * The logical inverse of {@link #getNormalizedData()}.
+	 * @param normalizedData the document's normalized data
+	 */
+	public void setNormalizedData(String normalizedData) {
+		this.normalizedData = normalizedData;
 	}
 	
 	/**

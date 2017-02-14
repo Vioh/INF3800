@@ -10,7 +10,7 @@ public class BrainDeadNormalizer implements INormalizer {
 	 */
 	public String normalize(String value) {
 		// Only consider ordinary English characters.
-		value = value.replaceAll("[^a-zA-Z0-9]", " ");
+//		value = value.replaceAll("[^a-zA-Z0-9]", " ");
 		
 		// Squeeze blanks.
 		value = value.replaceAll("\\s+", " ").trim();
