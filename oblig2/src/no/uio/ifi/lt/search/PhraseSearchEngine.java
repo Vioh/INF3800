@@ -49,30 +49,30 @@ public class PhraseSearchEngine implements ISearchEngine {
 	public IResultSet evaluate(String value) {
 		int size = this.suffixArray.size();
 		IQuery query = new Query(value, this.normalizer);
-
-		// Placeholder.
+		String queryNorm = SuffixArray.normalize(value);
+		
+		// Placeholder
 		ResultSet resultSet = new ResultSet(query, 50);
 		
 		// Consult the suffix data. A prefix of a suffix is an infix.
-		int index = this.suffixArray.lookup(value);
-		if (index >= size) {
-			return resultSet;
-		}
-		// Key not found? The index tells us the logical insertion point, 
+		int index = this.suffixArray.lookup(queryNorm);
+		if(index >= size) return resultSet;
+		
+		// Key not found? The index tells us the logical insertion point,
 		// which is the starting point for all the prefix matches.
-		if (index < 0) {
+		if(index < 0) {
 			index = -(index + 1);
 		}
-		while (index < size) {
+		while(index < size) {
 			int entry = this.suffixArray.getEntry(index);
 			int offset = this.suffixArray.getOffset(index);
-			IDocument document = this.documentStore.getDocument(entry);
-			String key = document.getOriginalData();
+			String key = this.suffixArray.getNormalizedData(entry);
 			String suffix = (offset == 0) ? key : key.substring(offset);
-			if (!suffix.startsWith(query.getOriginalQuery())) {
+			if(!suffix.startsWith(queryNorm)) {
 				break;
 			}
 			// Just append lexicographically.
+			IDocument document = this.documentStore.getDocument(entry);
 			resultSet.appendResult(new Result(document, 1.0));
 			++index;
 		}
