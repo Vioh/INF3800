@@ -6,13 +6,14 @@ import no.uio.ifi.lt.preprocessing.INormalizer;
  * {@link IQuery} interface.
  */
 public class Query implements IQuery {
-	/** The original query string. */
+	/**
+	 * The original query string.
+	 */
 	private String originalQuery;
-	
-	/** The normalized query string. */
-	private String normalizedQuery;
-	
-	/**The length of a normalized version of {@link #originalQuery}. */
+		
+	/**
+	 * The length of a normalized version of {@link #originalQuery}.
+	 */
 	private int normalizedLength;
 	
 	/**
@@ -22,8 +23,7 @@ public class Query implements IQuery {
 	 */
 	public Query(String originalQuery, INormalizer normalizer) {
 		this.originalQuery = originalQuery;
-		this.normalizedQuery = normalizer.normalize(originalQuery);
-		this.normalizedLength = this.normalizedQuery.length();
+		this.normalizedLength = normalizer.normalize(originalQuery).length();
 	}
 	
 	/**
@@ -38,12 +38,5 @@ public class Query implements IQuery {
 	 */
 	public String getOriginalQuery() {
 		return this.originalQuery;
-	}
-	
-	/**
-	 * Implements the {@link IQuery} interface.
-	 */
-	public String getNormalizedQuery() {
-		return this.normalizedQuery;
 	}
 }

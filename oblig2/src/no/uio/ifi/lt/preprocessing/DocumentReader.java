@@ -71,7 +71,6 @@ public abstract class DocumentReader {
 		Document document = new Document();
 		
 		document.setOriginalData(originalData);
-		document.setNormalizedData(normalizedData);
 		document.setExtraData(extraData);
 		document.setNormalizedLength(normalizedData.length());
 		document.setStaticRank(0.0);
