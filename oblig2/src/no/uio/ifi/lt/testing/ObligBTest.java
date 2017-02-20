@@ -64,13 +64,13 @@ public class ObligBTest extends TestCase {
 		while (resultIt.hasNext()) {		
 			resultContent.add(resultIt.next().getDocument().getOriginalData());
 		}
-		// System.out.println("results: " + resultContent);
+		System.out.println("results: " + resultContent);
 		
 		// we should have 12 matches here
 		Assert.assertEquals(12, resultContent.size());
 		// example of match
-		Assert.assertTrue(resultContent.contains("reasons for enquiry--to provide a standard instrument for " + 
-				"the calibration of low speed anemometers ."));
+		Assert.assertTrue(resultContent.contains("\nreasons for enquiry--to provide a standard instrument for\n" + 
+				"the calibration of low speed anemometers .\n"));
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class ObligBTest extends TestCase {
 		while (resultIt.hasNext()) {		
 			resultContent.add(resultIt.next().getDocument().getOriginalData());
 		}
-		// System.out.println("results: " + resultContent);
+		System.out.println("results: " + resultContent);
 		
 		// we should have 7 matches here
 		Assert.assertEquals(7, resultContent.size());
@@ -107,4 +107,11 @@ public class ObligBTest extends TestCase {
 		Assert.assertTrue(resultContent.contains("[10712410] |[[R (programming_language)|R]] is a very powerful tool " +
 				"that can be used to perform almost any kind of statistical analysis, and is freely downloadable."));
 	}
+
+	 public static void main(String[] args) {
+		 ObligBTest test = new ObligBTest();
+		 test.createLogger();
+		 test.testCran();
+		 test.testWeScience();
+	 }
 }
