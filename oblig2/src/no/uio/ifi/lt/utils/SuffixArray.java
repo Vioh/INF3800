@@ -12,7 +12,7 @@ import no.uio.ifi.lt.tokenization.ITokenizer;
  * the keys in a {@link IDocumentStore} object.
  */
 public class SuffixArray {
-	/** The comparator to compare 2 suffices lexicographically */
+	/** The comparator to compare 2 suffixes lexicographically */
 	private final SuffixComparator suffixComparator;	
 	
 	/** The suffix array with suffix objects that represent tokens from the docs */
@@ -58,7 +58,7 @@ public class SuffixArray {
 		}
 	}
 	
-	/** Comparator for comparing 2 normalized  suffices lexicographically */
+	/** Comparator for comparing 2 normalized  suffixes lexicographically */
 	private static class SuffixComparator implements Comparator<Suffix> {		
 		private final String[] normalizedDocs;
 		
