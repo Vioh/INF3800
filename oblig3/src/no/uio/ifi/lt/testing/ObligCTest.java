@@ -99,7 +99,6 @@ public class ObligCTest extends TestCase {
 		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10160370]"));
 		assertEquals(4.0, firstResult.getRelevance(), 0.00001);
 
-
 		// Uncomment to see all results
 		// for (IResult result : results) {
 			// System.out.println(result.getRelevance());
