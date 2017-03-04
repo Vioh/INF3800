@@ -1,5 +1,4 @@
 package no.uio.ifi.lt.search;
-
 import java.util.logging.Logger;
 import no.uio.ifi.lt.ranking.BrainDeadRanker;
 import no.uio.ifi.lt.tokenization.BrainDeadTokenizer;

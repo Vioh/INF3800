@@ -1,17 +1,19 @@
 package no.uio.ifi.lt.search;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import no.uio.ifi.lt.indexing.IInvertedIndex;
 import no.uio.ifi.lt.indexing.ILexicon;
+import no.uio.ifi.lt.indexing.Posting;
+import no.uio.ifi.lt.indexing.PostingList;
 import no.uio.ifi.lt.preprocessing.INormalizer;
 import no.uio.ifi.lt.ranking.IRanker;
+import no.uio.ifi.lt.storage.IDocument;
 import no.uio.ifi.lt.storage.IDocumentStore;
 import no.uio.ifi.lt.tokenization.IToken;
 import no.uio.ifi.lt.tokenization.ITokenizer;
+import no.uio.ifi.lt.utils.Sieve;
+import no.uio.ifi.lt.utils.HeapItem;
 
 /**
  * Implements the query evaluation logic in a search engine.
@@ -33,6 +35,26 @@ public class QueryEvaluator implements IQueryEvaluator {
 		this.logger = logger;
 	}
 	
+	//*************************** NEWLY ADDED CODES ****************************//
+	
+	/** The document collection which stores all the documents */
+	private IDocumentStore documentStore;
+	
+	/** Defines the way we rank a document */
+	private IRanker ranker;
+	
+	/** The query to evaluate */
+	private IQuery query;
+	
+	/** For N-of-M matching, N is equal to M multiplied by the recallThreshold */
+	private double N;
+	
+	/** An array of terms that are present in the query */
+	private IToken[] queryTerms;
+	
+	/** An array over the postings lists for all of the query terms */
+	private PostingList[] plists;
+	
 	/**
 	 * Implements the {@link IQueryEvaluator} interface.
 	 */
@@ -42,40 +64,86 @@ public class QueryEvaluator implements IQueryEvaluator {
 			return new ResultSet(query, 0);
 		}
 		// Spam the logs?
-		boolean debug =  this.settings.debug && (this.logger != null) && this.logger.isLoggable(Level.FINEST);
-
-		// Should the ranker spam the logs as well?
-		ranker.debug(debug);
+		boolean debug = this.settings.debug && (this.logger != null) && this.logger.isLoggable(Level.FINEST);
+		ranker.debug(debug); // should the ranker spam the logs as well?
 		
 		// Synchronize query processing with document processing.
 		INormalizer normalizer = invertedIndex.getNormalizer();
 		ITokenizer tokenizer = invertedIndex.getTokenizer();
 		ILexicon lexicon = invertedIndex.getLexicon();
-		IDocumentStore documentStore = invertedIndex.getDocumentStore();
+		this.documentStore = invertedIndex.getDocumentStore();
 
-		// Process a normalized version, not the raw value.
+		// Split the normalized query into separate terms 
 		String normalizedQuery = normalizer.normalize(query.getOriginalQuery());
-
-		// Split the query string up into terms.
-		IToken[] queryTerms = tokenizer.toArray(normalizedQuery);
+		this.queryTerms = tokenizer.toArray(normalizedQuery);
 		
-		// TODO: 
-		// 
-		// Now you have all the queries, and an inverted index. Your task is to retrieve ranks for each document 
-		// according to the recall of the document, and make sure you keep track of the highest scoring documents!
-		// 
-		// After doing this, you can return the most relevant documents
-		// as a ResultSet, containing no more than 10 results. 
-		// (you should use the value in this.settings.candidates for the size of the ResultSet). 
-		// 
-		// Do program efficiently! Do not traverse unnecessary, or keep things in memory if
-		// it is not called for. Optimizing will be rewarded!
-		// 
-		// There is pre-code (i.e. Sieve) you may find useful, or you may program everything yourself!
-		//
-		// THE LAST TWO LINES COULD LOOK LIKE THIS:		
-		// 		results.sortByRelevance();
-		// 		return results;
-		throw new RuntimeException("Your task is to complete this method!");
+		// Gather the postings lists of all the query terms
+		this.plists = new PostingList[queryTerms.length];
+		for(int i = 0; i < queryTerms.length; ++i) {
+			String term = queryTerms[i].getValue();
+			this.plists[i] = invertedIndex.getPostingList(lexicon.lookup(term));
+		}
+		
+		// Initialize other necessary variables
+		this.ranker = ranker;
+		this.N = this.settings.rankThreshold * this.queryTerms.length;
+		int[] pointers = new int[this.plists.length];
+		Sieve<IDocument, Double> sieve = new Sieve<IDocument, Double>(this.settings.candidates);
+		
+		// Perform the document-at-at-time evaluation, and return the result set.
+		while(evaluateDoc(pointers, sieve)) {}
+		ResultSet results = new ResultSet(query, sieve.capacity());
+		Iterator<HeapItem<IDocument, Double>> iterator = sieve.iterator();
+		while(iterator.hasNext()) {
+			HeapItem<IDocument, Double> item = iterator.next();
+			results.appendResult(new Result(item.data, item.rank));
+		}
+ 		results.sortByRelevance();
+ 		return results;
+	}
+	
+	/**
+	 * Evaluate the score/rank for a single document. The document to be evaluated
+	 * is the one with the lowest docID among those that are located at the current
+	 * positions on the postings lists, specified by the pointers[] array.
+	 * <p>
+	 *  
+	 * @param pointers array of indices that point to current positions on the postings lists.
+	 * @param sieve the sieve with the documents as data and integers as ranking.
+	 * @return false if there are no docs left to evaluate, and true otherwise. 
+	 */
+	private boolean evaluateDoc(int[] pointers, Sieve<IDocument, Double> sieve) {
+		// Get the minimum docID to know which document to evaluate.
+		int minDocID = Integer.MAX_VALUE;
+		int counter = 0; 
+		for(int i = 0; i < pointers.length; ++i) {
+			if(pointers[i] >= this.plists[i].size()) {
+				continue; // no docs left in this postings list to evaluate.
+			}
+			int docID = plists[i].getPosting(pointers[i]).getDocumentId();
+			if(docID < minDocID) minDocID = docID;
+			++counter;
+		}
+		// Return false if there are no docs left to evaluate, or if we know 
+		// for certain that the recall will be lower than the threshold.
+		if(counter < this.N || counter == 0) return false;
+	
+		// Compute the ranking for the document
+		this.ranker.reset();
+		for(int i = 0; i < pointers.length; ++i) {
+			if(pointers[i] >= this.plists[i].size()) {
+				continue; // skip this list as it has already been traversed
+			}
+			Posting posting = this.plists[i].getPosting(pointers[i]);
+			if(posting.getDocumentId() == minDocID) {
+				ranker.update(this.queryTerms[i], posting, plists[i]);
+				++pointers[i]; // increment the pointer for next document
+			}
+		}
+		// Sift the document if the rank is higher than recall threshold
+		IDocument doc = this.documentStore.getDocument(minDocID);
+		double rank = ranker.evaluate(this.query, doc);
+		if(rank >= N) sieve.sift(doc, rank);
+		return true;
 	}
 }

@@ -73,7 +73,7 @@ public class ResultSet implements IResultSet {
 	 * Returns the size of the result set
 	 * @return the size of the result set
 	 */
-	public Object size() {
+	public int size() {
 		return results.size();
 	}
 }
