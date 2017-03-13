@@ -16,5 +16,5 @@ public interface IResultSet extends Iterable<IResult> {
 	 * Returns the size of the result set
 	 * @return the size of the result set
 	 */
-	Object size();
+	int size();
 }

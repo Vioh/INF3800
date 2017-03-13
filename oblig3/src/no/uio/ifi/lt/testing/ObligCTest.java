@@ -1,9 +1,5 @@
 package no.uio.ifi.lt.testing;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -11,14 +7,12 @@ import java.util.logging.Logger;
 import no.uio.ifi.lt.search.IResult;
 import no.uio.ifi.lt.search.IResultSet;
 import no.uio.ifi.lt.search.ISearchEngine;
-import no.uio.ifi.lt.search.PhraseSearchEngine;
 import no.uio.ifi.lt.search.SimpleSearchEngine;
-import no.uio.ifi.lt.tokenization.BrainDeadTokenizer;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
- * Test program for assignment B
+ * Test program for assignment C
  */
 public class ObligCTest extends TestCase {
 	Logger logger;	
@@ -29,7 +23,7 @@ public class ObligCTest extends TestCase {
 	
 	public void createLogger() {
 		// Create a logger.
-		logger = Logger.getLogger(ObligBTest.class.getName());
+		logger = Logger.getLogger(ObligCTest.class.getName());
 		Handler[] handlers = logger.getHandlers();
 		for (int i = 0; i < handlers.length; ++i) {
 			logger.removeHandler(handlers[i]);
@@ -63,15 +57,15 @@ public class ObligCTest extends TestCase {
 
 		// Checking the first result
 		IResult firstResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("the present article describes an investigation of"));
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("\nthe present article describes an investigation of"));
 		assertEquals(6.0, firstResult.getRelevance(), 0.00001);
 
 		// Uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 
 	/**
@@ -100,11 +94,11 @@ public class ObligCTest extends TestCase {
 		assertEquals(4.0, firstResult.getRelevance(), 0.00001);
 
 		// Uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 	
 	public static void main(String[] args) {
