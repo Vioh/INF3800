@@ -61,11 +61,11 @@ public class ObligCTest extends TestCase {
 		assertEquals(6.0, firstResult.getRelevance(), 0.00001);
 
 		// Uncomment to see all results
-//		for (IResult result : results) {
-//			System.out.println(result.getRelevance());
-//			System.out.println(result.getDocument().getOriginalData());
-//			System.out.println(result.getDocument().getExtraData());
-//		}
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 
 	/**
@@ -94,11 +94,11 @@ public class ObligCTest extends TestCase {
 		assertEquals(4.0, firstResult.getRelevance(), 0.00001);
 
 		// Uncomment to see all results
-//		for (IResult result : results) {
-//			System.out.println(result.getRelevance());
-//			System.out.println(result.getDocument().getOriginalData());
-//			System.out.println(result.getDocument().getExtraData());
-//		}
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 	
 	public static void main(String[] args) {

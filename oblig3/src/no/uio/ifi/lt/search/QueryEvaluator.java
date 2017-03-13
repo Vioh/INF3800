@@ -106,10 +106,8 @@ public class QueryEvaluator implements IQueryEvaluator {
 	 * Evaluate the score/rank for a single document. The document to be evaluated
 	 * is the one with the lowest docID among those that are located at the current
 	 * positions on the postings lists, specified by the pointers[] array.
-	 * <p>
-	 *  
 	 * @param pointers array of indices that point to current positions on the postings lists.
-	 * @param sieve the sieve with the documents as data and integers as ranking.
+	 * @param sieve the sieve with the documents as data and floats as ranking.
 	 * @return false if there are no docs left to evaluate, and true otherwise. 
 	 */
 	private boolean evaluateDoc(int[] pointers, Sieve<IDocument, Double> sieve) {
@@ -132,12 +130,12 @@ public class QueryEvaluator implements IQueryEvaluator {
 		this.ranker.reset();
 		for(int i = 0; i < pointers.length; ++i) {
 			if(pointers[i] >= this.plists[i].size()) {
-				continue; // skip this list as it has already been traversed
+				continue; // skip this list as it has already been completely traversed
 			}
 			Posting posting = this.plists[i].getPosting(pointers[i]);
 			if(posting.getDocumentId() == minDocID) {
 				ranker.update(this.queryTerms[i], posting, plists[i]);
-				++pointers[i]; // increment the pointer for next document
+				++pointers[i]; // increment the pointer for the next document
 			}
 		}
 		// Sift the document if the rank is higher than recall threshold
