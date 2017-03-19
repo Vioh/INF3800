@@ -43,11 +43,11 @@ public class TfIdfRanker implements IRanker {
 	}
 
 	@Override
-	public void update(IToken token, Posting posting, PostingList postingList) {			
+	public void update(IToken token, Posting posting, PostingList postingList) {	
 		int tf = posting.getOccurrenceCount();
 		int df = postingList.size();
 		double idf = Math.log(N/df);
-		this.accumulatedResult += (tf*idf);		
+		this.accumulatedResult += (tf*idf);
 		
 		// Log spam?
 		if (this.debug && this.logger != null) {

@@ -1,28 +1,28 @@
 package no.uio.ifi.lt.storage;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.HashMap;
 import no.uio.ifi.lt.indexing.IInvertedIndex;
 import no.uio.ifi.lt.indexing.ILexicon;
-import no.uio.ifi.lt.search.IQueryEvaluator;
 import no.uio.ifi.lt.tokenization.IToken;
 
 public class DocumentVector implements IDocumentVector {
 	/** The lexicon that contains all the unique terms in the collection */
 	ILexicon lexicon;
 	
-	/** Length of the vector, defined by the formal mathematical definition */
-	private double length;
+	/** Length of the vector, aka. the magnitude */
+	private double magnitude;
 	
 	/** Total number of documents hardcoded in */
 	private final int N = 10000;
 	
 	/** 
-	 * The vector itself is represented by a hashmap that maps from 
-	 * termId (int) to the corresponding ifidf weight (double). 
+	 * The document vector itself can be considered as a map that maps the
+	 * termId (an int that represents the vector index) to the corresponding
+	 * tfidf weight (a double that represents the vector entry).
 	 * <p>
-	 * Note that the hashmap stores only the lexicon terms that have
-	 * nonzero weights. This is nothing more than an optimization.
+	 * We use HashMap as the main datastructure to access the data in O(1) time.
+	 * And for optimization, this HashMap will only store the tfidf weights for
+	 * the lexicon terms that have nonzero weights. 
 	 */
 	HashMap<Integer, Double> vector = new HashMap<Integer, Double>();
 	
@@ -34,39 +34,38 @@ public class DocumentVector implements IDocumentVector {
 		
 		// Count the term occurrences to compute the tf weights.
 		for(IToken term : documentTerms) {
-			int termId = lexicon.lookup(term.getValue());
 			double tf = 0.0;
-			
-			if(this.vector.containsKey(termId)) {
+			int termId = lexicon.lookup(term.getValue());
+			if(this.vector.containsKey(termId))
 				tf = this.vector.get(termId);
-			}
 			this.vector.put(termId, ++tf);
-		}
-		
-		// Add the idf contributions to the tfidf weights in the vector.
+		}		
+		// Add the idf contributions to the weights in the vector
 		for(int termId : this.vector.keySet()) {			
 			int df = invertedIndex.getPostingList(termId).size();
 			double idf = Math.log(N/df);			
 			double tfidf = this.vector.get(termId) * idf;
 			this.vector.put(termId, tfidf);			
-			this.length += (tfidf*tfidf); // accumulate to length^2
+			this.magnitude += (tfidf*tfidf); // accumulate to magnitude^2
 		}
-		length = Math.sqrt(length);	
+		magnitude = Math.sqrt(magnitude);	
 	}
 
 	/**
-	 * Implements the {@link IDocumentVector} interface.
+	 * Implements the {@link IDocumentVector} interface. 
+	 * See there for more details!
 	 */
 	public double getCosineSimilarity(IDocumentVector docVector) {
 		double cosine = 0.0;
 		for(int termId : this.vector.keySet()) {
 			cosine += this.getWeight(termId) * docVector.getWeight(termId);
 		}
-		return cosine / (this.length * docVector.getLength());
+		return cosine / (this.magnitude * docVector.getMagnitude());
 	}
 	
 	/**
 	 * Implements the {@link IDocumentVector} interface.
+	 * See there for more details!
 	 */
 	public double getWeight(int lexiconId) {
 		Double weight = this.vector.get(lexiconId);
@@ -76,13 +75,15 @@ public class DocumentVector implements IDocumentVector {
 
 	/**
 	 * Implements the {@link IDocumentVector} interface.
+	 * See there for more details!
 	 */
-	public double getLength() {
-		return this.length;
+	public double getMagnitude() {
+		return this.magnitude;
 	}
 	
 	/**
 	 * Implements the {@link IDocumentVector} interface.
+	 * See there for more details!
 	 */
 	public Iterator<Double> getTfIdfScoreIterator() {
 		
@@ -98,8 +99,8 @@ public class DocumentVector implements IDocumentVector {
 			}
 			
 			public void remove() {
-				String error = "Iterator does not support element removal!";
-				throw new UnsupportedOperationException(error);
+				String err = "This iterator does not support element removal!";
+				throw new UnsupportedOperationException(err);
 			}
 		};
 	}

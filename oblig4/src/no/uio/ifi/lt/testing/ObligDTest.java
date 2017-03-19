@@ -174,7 +174,6 @@ public class ObligDTest extends TestCase {
 		}
 	}
 	
-	/** Main. */
 	public static void main(String[] args) {
 		ObligDTest test = new ObligDTest();
 		test.createLogger();
