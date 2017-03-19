@@ -27,7 +27,7 @@ public class SearchEngine implements ISearchEngine {
 	private ITokenizer tokenizer;
 
 	/** Defines where and how documents are stored. */
-	private IDocumentStore documentStore;
+	public IDocumentStore documentStore;
 
 	/** Defines the inverted index over the contents of the document store. */
 	private IInvertedIndex invertedIndex;

@@ -6,7 +6,7 @@ public interface IDocumentVector {
 	 * @param lexiconId identifies the term for which we want the associated posting list
 	 * @return tf-idf for term associated with lexiconId
 	 */
-	double get(int lexiconId);
+	double getWeight(int lexiconId);
 	
 	/**
 	 * @param docVector for comparison
@@ -17,7 +17,7 @@ public interface IDocumentVector {
 	/**
 	 * @return the length of the document vector
 	 */
-	int size();
+	double getLength();
 	
 	/**
 	 * @return iterator of the tf-idf weights, aka the actual vector
