@@ -122,7 +122,7 @@ public class ObligDTest extends TestCase {
 		System.out.println("Lookup took " + ((after - before) / 1000000.0) + " ms.");
 		assertEquals(10, results.size());
 		Iterator<IResult> resultIterator = results.iterator();
-		 		
+
 		// checking the first 3 results
 		IResult firstResult = resultIterator.next();
 		IResult secondResult = resultIterator.next();
@@ -180,6 +180,6 @@ public class ObligDTest extends TestCase {
 		test.testCranTfIdf();
 		test.testWeScienceTfIdf();
 		test.testCranSimilarity();
-		test.testWeScienceSimilarity();		
+		test.testWeScienceSimilarity();
 	}
 }
