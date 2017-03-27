@@ -3,24 +3,26 @@ import java.util.Iterator;
 
 public interface IDocumentVector {	
 	/**
-	 * @param lexiconId identifies the term for which we want the associated posting list
-	 * @return tf-idf for term associated with lexiconId
+	 * Get the tfidf weight corresponding to a specific lexicon term.
+	 * @param lexiconId identifies a specific term in the lexicon. 
+	 * @return tfidf weight for the term associated with lexiconId.
 	 */
-	double get(int lexiconId);
+	double getWeight(int lexiconId);
 	
 	/**
-	 * @param docVector for comparison
-	 * @return cosine similarity between the two documents
+	 * Compute the normalized cosine scores between this document and another.
+	 * @param docVector the other document for the comparison.
+	 * @return cosine similarity between the two documents.
 	 */
 	double getCosineSimilarity(IDocumentVector docVector);
 	
 	/**
-	 * @return the length of the document vector
+	 * @return the magnitude (aka. lenght) of the document vector. 
 	 */
-	int size();
+	double getMagnitude();
 	
 	/**
-	 * @return iterator of the tf-idf weights, aka the actual vector
+	 * @return iterator of the tfidf weights, aka the actual vector. 
 	 */
 	Iterator<Double> getTfIdfScoreIterator();
 }

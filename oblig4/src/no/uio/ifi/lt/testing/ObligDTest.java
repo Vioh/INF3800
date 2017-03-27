@@ -53,22 +53,20 @@ public class ObligDTest extends TestCase {
 		assertEquals(10, results.size());
 		Iterator<IResult> resultIterator = results.iterator();
 	
-		// checking the first result
+		// checking the first 3 results
 		IResult firstResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("the present article describes an investigation of"));
-		
 		IResult secondResult = resultIterator.next();
-		assertTrue(secondResult.getDocument().getOriginalData().startsWith("the interaction between shock waves"));
-
 		IResult thirdResult = resultIterator.next();
-		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("approximate analytical solutions"));
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("\nthe present article describes an investigation of"));
+		assertTrue(secondResult.getDocument().getOriginalData().startsWith("\nthe interaction between shock waves"));
+		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("\napproximate analytical solutions"));
 
 		// uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());	
+		}
 	}
 
 	/**
@@ -90,22 +88,20 @@ public class ObligDTest extends TestCase {
 		assertEquals(10, results.size());
 		Iterator<IResult> resultIterator = results.iterator();
 		
-		// checking the first result
+		// checking the first 3 results
 		IResult firstResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10490810]"));
-
 		IResult secondResult = resultIterator.next();
-		assertTrue(secondResult.getDocument().getOriginalData().startsWith("[10491770]"));
-
 		IResult thirdResult = resultIterator.next();
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10490810]"));
+		assertTrue(secondResult.getDocument().getOriginalData().startsWith("[10491770]"));
 		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("[10441280]"));
 
 		// uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 
 	/**
@@ -126,23 +122,21 @@ public class ObligDTest extends TestCase {
 		System.out.println("Lookup took " + ((after - before) / 1000000.0) + " ms.");
 		assertEquals(10, results.size());
 		Iterator<IResult> resultIterator = results.iterator();
-		 		
-		// checking the first result
+		 
+		// checking the first 3 results
 		IResult firstResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("the flow past a slender delta wing"));
-
 		IResult secondResult = resultIterator.next();
-		assertTrue(secondResult.getDocument().getOriginalData().startsWith("an investigation has been conducted"));
-
 		IResult thirdResult = resultIterator.next();
-		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("pressure-distribution and force tests"));
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("\nthe flow past a slender delta"));
+		assertTrue(secondResult.getDocument().getOriginalData().startsWith("\nan investigation has been conducted"));
+		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("\npressure-distribution and force"));
 		
 		// uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 
 	/**
@@ -164,22 +158,20 @@ public class ObligDTest extends TestCase {
 		assertEquals(10, results.size());
 		Iterator<IResult> resultIterator = results.iterator();
 		
-		// checking the first result
+		// checking the first 3 results
 		IResult firstResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10051350]"));
-
 		IResult secondResult = resultIterator.next();
-		assertTrue(secondResult.getDocument().getOriginalData().startsWith("[10051370]"));
-
 		IResult thirdResult = resultIterator.next();
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10051350]"));
+		assertTrue(secondResult.getDocument().getOriginalData().startsWith("[10051370]"));
 		assertTrue(thirdResult.getDocument().getOriginalData().startsWith("[10051420]"));
 
 		// uncomment to see all results
-		// for (IResult result : results) {
-			// System.out.println(result.getRelevance());
-			// System.out.println(result.getDocument().getOriginalData());
-			// System.out.println(result.getDocument().getExtraData());
-		// }
+		for (IResult result : results) {
+			System.out.println(result.getRelevance());
+			System.out.println(result.getDocument().getOriginalData());
+			System.out.println(result.getDocument().getExtraData());
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -188,7 +180,6 @@ public class ObligDTest extends TestCase {
 		test.testCranTfIdf();
 		test.testWeScienceTfIdf();
 		test.testCranSimilarity();
-		test.testWeScienceSimilarity();
-		
+		test.testWeScienceSimilarity();	
 	}
 }

@@ -10,6 +10,7 @@ public class TfIdfRanker implements IRanker {
 	private Logger logger;
 	private boolean debug;
 	private double accumulatedResult;
+	private final int N = 10000; // total number of documents hardcoded in
 
 	public TfIdfRanker(Logger logger) {
 		this.logger = logger;
@@ -43,7 +44,15 @@ public class TfIdfRanker implements IRanker {
 
 	@Override
 	public void update(IToken token, Posting posting, PostingList postingList) {	
-		//TODO: COMPLETE THIS METHOD!
-		throw new RuntimeException("ASSIGNMENT D, (A): Complete this method!");
+		int tf = posting.getOccurrenceCount();
+		int df = postingList.size();
+		double idf = Math.log(N/df);
+		this.accumulatedResult += (tf*idf);
+		
+		// Log spam?
+		if (this.debug && this.logger != null) {
+			this.logger.finest(String.format("Token '%s' occurs across %d documents.", token.getValue(), postingList.size()));
+			this.logger.finest(String.format("Token '%s' occurs %d times in the current document.", token.getValue(), posting.getOccurrenceCount()));
+		}
 	}
 }
