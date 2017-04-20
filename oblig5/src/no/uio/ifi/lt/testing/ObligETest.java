@@ -60,8 +60,8 @@ public class ObligETest extends TestCase {
 		// checking the first 2 result
 		IResult firstResult = resultIterator.next();
 		IResult secondResult = resultIterator.next();
-		assertTrue(firstResult.getDocument().getOriginalData().startsWith("it is well-known that"));
-		assertTrue(secondResult.getDocument().getOriginalData().startsWith("the problems of heat transfer"));
+		assertTrue(firstResult.getDocument().getOriginalData().startsWith("\nit is well-known that"));
+		assertTrue(secondResult.getDocument().getOriginalData().startsWith("\nthe problems of heat transfer"));
 
 		// uncomment to see all results
 		for (IResult result : results) {
@@ -93,7 +93,7 @@ public class ObligETest extends TestCase {
 		// checking the first result
 		IResult firstResult = resultIterator.next();
 		assertTrue(firstResult.getDocument().getOriginalData().startsWith("[10340610]") || 
-		           firstResult.getDocument().getOriginalData().startsWith("10840450"));
+		           firstResult.getDocument().getOriginalData().startsWith("[10840450]"));
 
 		// uncomment to see all results
 		for (IResult result : results) {

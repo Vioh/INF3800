@@ -57,7 +57,7 @@ public class FolderReader {
 		 * And actually, the accuracy would probably go up, too!
 		 */
 		while ((line = reader.readLine()) != null) {
-		// while ((line = reader.readLine()) != null && lineNumber < 5) {
+//		while ((line = reader.readLine()) != null && lineNumber < 5) {
 			lineNumber++;
 			if (line.length() == 0 || line.matches("^\\s+$")) continue;
 			else {

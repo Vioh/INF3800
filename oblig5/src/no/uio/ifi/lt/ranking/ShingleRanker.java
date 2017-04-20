@@ -61,7 +61,15 @@ public class ShingleRanker implements IRanker {
 			this.logger.finest(String.format("document.original = '%s'", document.getOriginalData()));
 			this.logger.finest(String.format("document.extra = '%s'", document.getExtraData()));
 		}
-		throw new RuntimeException("COMPLETE THIS METHOD");
+		
+		// Total number of k-grams in the original query.
+		int k1 = query.getOriginalQuery().length() - this.width + 1;
+		
+		// Total number of k-grams in the document.
+		int k2 = document.getOriginalData().length() - this.width + 1;
+		
+		// Return the Jaccard coefficient.
+		return (double) this.hitCount / (k1 + k2);
 		
 		/*
 		 * Return a score based on an evaluation metric you find suitable for k-gram matching. 

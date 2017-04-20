@@ -1,12 +1,10 @@
 package no.uio.ifi.lt.nbclassifier;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import no.uio.ifi.lt.indexing.IInvertedIndex;
 import no.uio.ifi.lt.indexing.ILexicon;
 import no.uio.ifi.lt.indexing.InMemoryLexicon;
-import no.uio.ifi.lt.storage.IDocument;
+import no.uio.ifi.lt.indexing.PostingList;
 import no.uio.ifi.lt.tokenization.IToken;
 import no.uio.ifi.lt.utils.Sieve;
 
@@ -16,23 +14,29 @@ import no.uio.ifi.lt.utils.Sieve;
  * and a likelihood distribution P(w|c).
  */
 public class MultinomialNaiveBayes implements DocumentClassifier {
+	/** Total number of classifying classes (or categories) */
+	private int nClasses;
+	
 	/** Lexicon comprising lexicon entries from all the classes */
-	ILexicon globalLexicon;
+	private ILexicon globalLexicon;
 	
-	/** Prior class distribution P(c) */
-	Map<Integer,Double> prior;
-	
+	/** Prior class distribution prior[c] = P(c) = pc */
+	private double[] prior;
+		
 	/** 
-	 * Likelihood distribution P(w|c).  The probability P(w_i|c_i)
-	 * is encoded as the value in likelihood.get(c_i).get(w_i)
+	 * Likelihood distribution P(w|c).  The probability P(w_j|c_i)
+	 * is encoded as the value in likelihood[c_i][w_j].
+	 * Note that I will mostly use "i" for the class number, and "j" 
+	 * for the term ID in the global lexicon.
 	 */
-	Map<Integer, Map<Integer,Double>> likelihood;
+	private double[][] likelihood;
 	
 	/**
 	 * Constructs a multinomial Naive Bayes classifier from a message store
 	 * @param store the message store
 	 */
 	public MultinomialNaiveBayes(MessageStore store) {	
+		this.nClasses = store.getIndexes().length;
 		constructGlobalLexicon(store);	
 		constructPrior(store);
 		constructLikelihood(store);
@@ -45,7 +49,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 */
 	private void constructGlobalLexicon (MessageStore store) {
 		globalLexicon = new InMemoryLexicon();
-		for (int i = 0 ; i < store.getIndexes().length ; i++) {
+		for (int i = 0 ; i < this.nClasses; ++i) {
 			IInvertedIndex localIndex = store.getIndexes()[i];
 			Iterator<String> iterator = localIndex.getLexicon().iterator();
 			while (iterator.hasNext()) {
@@ -59,8 +63,16 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * @param store the message store
 	 */
 	private void constructPrior(MessageStore store) {
-		prior = new HashMap<Integer,Double>();
-		throw new RuntimeException("IMPLEMENT THIS METHOD");
+		this.prior = new double[this.nClasses];
+		double nDocs = 0; // total number of docs in the entire training set
+		
+		for(int i = 0; i < this.nClasses; ++i) {
+			this.prior[i] = store.getIndexes()[i].getDocumentStore().size();
+			nDocs += this.prior[i];
+		}
+		for(int i = 0; i < this.nClasses; ++i) {
+			this.prior[i] /= nDocs;
+		}
 	}
 	
 	/**
@@ -68,14 +80,30 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * @param store the message score
 	 */
 	private void constructLikelihood(MessageStore store) {
-		likelihood = new HashMap<Integer,Map<Integer,Double>>();
-		for (int classNumber = 0 ; classNumber < store.getIndexes().length; classNumber++) {
-			likelihood.put(classNumber, new HashMap<Integer,Double>());
+		int nTerms = this.globalLexicon.size();
+		this.likelihood = new double[nClasses][nTerms];
+		
+		for(int i = 0; i < this.nClasses; ++i) {
+			IInvertedIndex localIndex = store.getIndexes()[i];
+			double nTokens = 0; // total number of tokens in this entire class
 			
-			// NB: the lexicon IDs from the local (class-specific) indexes will generally not
-			// correspond to the same lexicon IDs as in the global lexicon!
-			IInvertedIndex localIndex = store.getIndexes()[classNumber];
-			throw new RuntimeException("IMPLEMENT THIS METHOD");
+			// The counting of occurrences of tokens will be done here
+			Iterator<String> iter = localIndex.getLexicon().iterator();
+			while(iter.hasNext()) {
+				String term = iter.next();
+				int localID = localIndex.getLexicon().lookup(term);
+				int j = this.globalLexicon.lookup(term);
+				PostingList pl = localIndex.getPostingList(localID);
+				for(int k = 0; k < pl.size(); ++k) {
+					likelihood[i][j] += pl.getPosting(k).getOccurrenceCount();
+				}
+				nTokens += likelihood[i][j];
+			}			
+			// Final Laplace smoothing of all the likelihood
+			nTokens += nTerms; 
+			for(int j = 0; j < nTerms; ++j) {
+				likelihood[i][j] = (likelihood[i][j] + 1) / nTokens;
+			}
 		}
 	}
 
@@ -88,8 +116,14 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 */
 	public int classify (List<IToken> documentContent) {
 		Sieve<Integer, Double> posterior = new Sieve<Integer, Double>(1);
-		throw new RuntimeException("IMPLEMENT THIS METHOD");
-		// return posterior.iterator().next().data;
+		for(int i = 0; i < this.nClasses; ++i) {
+			double totalProb = Math.log(getPriorProbability(i));
+			for(IToken tok : documentContent) {
+				totalProb += Math.log(getLikelihoodProbability(tok.getValue(), i));
+			}
+			posterior.sift(i, totalProb);
+		}
+		return posterior.iterator().next().data;
 	}
 	
 	/**
@@ -98,7 +132,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * @return its probability
 	 */
 	public double getPriorProbability(int classNumber) {
-		return prior.get(classNumber);
+		return this.prior[classNumber];
 	}
 
 	/**
@@ -108,12 +142,12 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * @return the resulting probability
 	 */
 	public double getLikelihoodProbability(String word, int classNumber) {
-		int lexiconID = globalLexicon.lookup(word);
+		int lexiconID = this.globalLexicon.lookup(word);
 		if (lexiconID != ILexicon.INVALID) {
-			return likelihood.get(classNumber).get(lexiconID);
+			return this.likelihood[classNumber][lexiconID];
 		}
 		else {
-			return 0.0f;
+			return 0.0;
 		}
 	}
 
@@ -122,6 +156,6 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * @return the number of classes
 	 */
 	public int getNumberOfClasses() {
-		return prior.size();
+		return this.nClasses;
 	}
 }
