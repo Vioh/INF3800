@@ -82,7 +82,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	private void constructLikelihood(MessageStore store) {
 		int nTerms = this.globalLexicon.size();
 		this.likelihood = new double[nClasses][nTerms];
-		
+
 		for(int i = 0; i < this.nClasses; ++i) {
 			IInvertedIndex localIndex = store.getIndexes()[i];
 			double nTokens = 0; // total number of tokens in this entire class
@@ -100,7 +100,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 				nTokens += likelihood[i][j];
 			}			
 			// Final Laplace smoothing of all the likelihood
-			nTokens += nTerms; 
+			nTokens += nTerms;
 			for(int j = 0; j < nTerms; ++j) {
 				likelihood[i][j] = (likelihood[i][j] + 1) / nTokens;
 			}
@@ -119,13 +119,15 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 		for(int i = 0; i < this.nClasses; ++i) {
 			double totalProb = Math.log(getPriorProbability(i));
 			for(IToken tok : documentContent) {
-				totalProb += Math.log(getLikelihoodProbability(tok.getValue(), i));
+				double prob = getLikelihoodProbability(tok.getValue(), i);
+				if(prob < 0.0) continue; // skip this token!
+				totalProb += Math.log(prob);
 			}
 			posterior.sift(i, totalProb);
 		}
 		return posterior.iterator().next().data;
 	}
-	
+
 	/**
 	 * Returns the prior probability of a given class
 	 * @param classNumber the class
@@ -139,7 +141,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * Returns the likelihood probability of a word given its class
 	 * @param word the words
 	 * @param classNumber the class to condition on
-	 * @return the resulting probability
+	 * @return the resulting probability, or -1 if the word is not in the global lexicon
 	 */
 	public double getLikelihoodProbability(String word, int classNumber) {
 		int lexiconID = this.globalLexicon.lookup(word);
@@ -147,7 +149,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 			return this.likelihood[classNumber][lexiconID];
 		}
 		else {
-			return 0.0;
+			return -1;
 		}
 	}
 
