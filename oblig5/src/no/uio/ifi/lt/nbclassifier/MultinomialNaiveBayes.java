@@ -49,7 +49,7 @@ public class MultinomialNaiveBayes implements DocumentClassifier {
 	 * will be declared as stop words (i.e. set it to 1 if and only
 	 * if we don't want to use the stop words).
 	 */
-	private final double THRESHOLD = 1.0;
+	private final double THRESHOLD = 0.2;
 	
 	/**
 	 * The stop dictionary (which is a set containing all the stop words
