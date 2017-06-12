@@ -1,5 +1,10 @@
 package no.uio.ifi.lt.tokenization;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import no.uio.ifi.lt.utils.ArrayIterator;
 
 /**
@@ -9,6 +14,9 @@ import no.uio.ifi.lt.utils.ArrayIterator;
 public class ShingleGenerator implements ITokenizer {
 	/** The shingle size, i.e., the width of our sliding window over the text buffer */
 	private int width;
+	
+	/** Regex for splitting hte text */
+	private static final Pattern SPLITTER = Pattern.compile("\\b[a-zA-Z0-9æøåÆØÅ]+\\b");
 
 	/**
 	 * Constructor.
@@ -32,10 +40,32 @@ public class ShingleGenerator implements ITokenizer {
 	@Override
 	public IToken[] toArray(String text) {
 		/*
-		 * Return a k-gram array of "shingles" from the text. the 'k' is defined by 'this.width'.
-		 * A k-gram is simply a window over n characters in a string. For example, the set of 3-grams 
-		 * from the string backgammon would be the set {bac, ack, ckg, kga, gam, amm, mmo, mon}. 
+		 * The strategy is simply to first remove all non-letter symbols
+		 * from the text, and then squeeze all the blanks. After that,
+		 * we can just slide our k-wide window over the texxt to generate
+		 * the series of k-gram tokens. Note that the sliding will be
+		 * done character-wise, not word-wise.
 		 */
-		throw new RuntimeException("COMPLETE THIS METHOD!");
+		
+//		Matcher matcher = SPLITTER.matcher(text);
+//		List<IToken> tokens = new ArrayList<IToken>();
+//		
+//		int counter = 0;
+//		while(matcher.find()) {
+//			String tok = matcher.group();
+//			int pos = matcher.start();
+//			for(int i = 0, j = i + width; j <= tok.length(); ++i) {
+//				tokens.add(new Token(tok.substring(i, j++), counter++, pos++));
+//			}
+//		}
+//		return tokens.toArray(new IToken[counter]);
+		
+		
+		List<IToken> tokens = new ArrayList<IToken>();
+		int stop = text.length() - width + 1;
+		for(int i = 0, j = width; i < stop; ++i) {
+			tokens.add(new Token(text.substring(i, j++), i, i));
+		}
+		return tokens.toArray(new IToken[stop]);
 	}
 }
